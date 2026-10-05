@@ -1,230 +1,155 @@
-# DSA-PROJECT
-Dynamic Help Desk Ticket Management System
-📌 Overview
-This project implements a Dynamic Help Desk Ticket Management System using Data Structures and Algorithms in C++. The system simulates a customer-support environment where incoming tickets are stored, prioritized, and assigned to available support agents.
+# DSA_Project  
+Dynamic ticket management system using heap-based priority scheduling and time simulation in C++
 
-The system manages:
+---
 
-Dynamic ticket registration
+# Dynamic Support Ticket Management System (DSA Project)
 
-Support agent management
+## 📌 Overview  
+This project implements a Dynamic Support Ticket Management System using Data Structures and Algorithms (DSA). It simulates a real-world support system where tickets arrive over time and are assigned to available agents based on priority.
 
-Simulation of time
+The system dynamically manages:
+- Ticket assignment  
+- Agent availability  
+- Time progression  
 
-Priority-based ticket assignment
+---
 
-Automatic increase in ticket priority while waiting
+## ⚙️ Features  
+- Add support tickets dynamically  
+- Add and remove support agents  
+- Time-based simulation using TICK  
+- Priority-based ticket scheduling  
+- Automatic priority increase over waiting time  
+- Track system state in real time  
 
-Real-time system monitoring
+---
 
-⚙️ Main Features
-Create new support tickets during runtime
+## 🧾 Ticket Model  
+- ticket_id: Unique identifier  
+- arrival_time: Time when ticket is created  
+- base_priority: Initial priority  
+- wait_time: Time spent waiting  
+- status: WAITING / IN_PROGRESS / RESOLVED  
 
-Register new support agents
+---
 
-Remove agents who are currently available
+## 👨‍💻 Agent Model  
+- agent_id: Unique identifier  
+- status: AVAILABLE / BUSY  
+- current_ticket: Assigned ticket  
 
-Process the system using TICK
+---
 
-Automatically assign the highest-priority tickets
+## 🧠 Scheduling Logic  
 
-Increase ticket priority according to waiting time
+Each agent handles only one ticket at a time.
 
-Display the current status of tickets and agents
+Tickets are assigned based on:
 
-🧾 Ticket Structure
-Every ticket contains the following information:
+Effective Priority = base_priority + wait_time
 
-ticket_id → Unique identification number
+Higher effective priority gets processed first.
 
-arrival_time → Time at which the ticket entered the system
+Each ticket is resolved in exactly 1 time unit.
 
-base_priority → Priority assigned when the ticket was created
+Priority increases automatically as time passes.
 
-wait_time → Number of time units the ticket has remained unassigned
+---
 
-status → WAITING / IN_PROGRESS / RESOLVED
+## 🧱 Data Structures Used  
+- Max Heap → for ticket priority management  
+- Set → for available agents  
+- Map → for busy agents tracking  
+- Set → for resolved tickets  
 
-Priority Calculation
-The priority of a waiting ticket is calculated as:
+---
 
-Effective Priority = Base Priority + Waiting Time
+## ⌨️ Commands  
 
-Therefore, a ticket that has been waiting for a longer period can gradually become more important.
+| Command | Description |
+|--------|-------------|
+| ADD_TICKET id priority | Add a new ticket |
+| ADD_AGENT id | Add a new agent |
+| REMOVE_AGENT id | Remove an available agent |
+| TICK | Advance time by 1 unit |
+| QUERY | Display system status |
 
-👨💻 Agent Structure
-Each support agent contains:
+---
 
-agent_id → Unique identification number
+## 📥 Input Format  
+Commands are given line by line until EOF.
 
-status → AVAILABLE / BUSY
+---
 
-current_ticket → Ticket currently assigned to the agent
+## 📤 Output Format (QUERY)  
+For each QUERY, output:
 
-An agent can process only one ticket at a time.
+- Current time  
+- Waiting tickets (priority, ticket_id)  
+- Busy agents with tickets  
+- Resolved tickets  
 
-🧠 Scheduling Strategy
-The system follows a highest-priority-first scheduling strategy.
+---
 
-When an agent becomes available:
+## 🧪 Example  
 
-The system checks all waiting tickets.
-
-The ticket with the greatest effective priority is selected.
-
-If two tickets have the same priority, a consistent tie-breaking rule such as the smaller ticket ID can be used.
-
-The selected ticket is assigned to an available agent.
-
-A ticket requires exactly one unit of simulation time to complete.
-
-As the simulation progresses, waiting tickets automatically gain priority.
-
-🧱 Data Structures
-The project uses the following DSA concepts:
-
-Data Structure	Purpose
-Max Heap / Priority Queue	Stores and selects the highest-priority waiting ticket
-Set	Maintains available agents
-Map	Keeps track of agents currently handling tickets
-Set	Stores IDs of completed tickets
-
-These structures allow the system to efficiently manage tickets and agents as the simulation changes.
-
-⌨️ Available Commands
-Command	Purpose
-ADD_TICKET id priority	Creates a new support ticket
-ADD_AGENT id	Adds a new support agent
-REMOVE_AGENT id	Removes an available agent
-TICK	Moves simulation time forward by one unit
-QUERY	Displays the current system state
-
-📥 Input Format
-Commands are entered one per line. The program continues processing commands until the end of the input.
-
-Example:
-
-ADD_AGENT 1
-ADD_AGENT 2
-ADD_TICKET 201 6
-ADD_TICKET 202 4
-TICK
-QUERY
-TICK
-ADD_TICKET 203 9
-QUERY
-TICK
-QUERY
-
-📤 Output Format
-Whenever the QUERY command is entered, the system displays:
-
-Current simulation time
-
-Tickets currently waiting
-
-Agents currently processing tickets
-
-Tickets that have been completed
-
-Example:
-
-Time: 1
-Waiting: []
-Busy Agents: [(1,201),(2,202)]
-Resolved: []
-
-Time: 2
-Waiting: []
-Busy Agents: [(1,203)]
-Resolved: [201,202]
-
-Time: 3
-Waiting: []
-Busy Agents: []
-Resolved: [201,202,203]
-
-🔄 Working Process
-The simulation operates according to the following process:
-
-When ADD_TICKET is used
-A new ticket is created with its ID, base priority, and arrival time. It is then placed into the waiting-ticket structure.
-
-When ADD_AGENT is used
-A new agent is registered as AVAILABLE and becomes eligible to receive a ticket.
-
-When TICK is used
-The simulation clock increases by one unit.
-
-During this step:
-
-Tickets currently being processed may be completed.
-
-Completed tickets are moved to the resolved collection.
-
-Agents handling completed tickets become available.
-
-Waiting time of pending tickets increases.
-
-Available agents are assigned tickets according to priority.
-
-When REMOVE_AGENT is used
-An agent can be removed only if the agent is currently available. Busy agents cannot be removed until their current work is finished.
-
-When QUERY is used
-The current state of the complete support system is displayed.
-
-⏱ Complexity Analysis
-Let:
-
-N = number of tickets
-
-M = number of agents
-
-The approximate operations are:
-
-Insert ticket: O(log N)
-
-Remove/select highest-priority ticket: O(log N)
-
-Add/remove agent: O(log M)
-
-Assign ticket: O(log N + log M)
-
-Display waiting tickets: O(N log N) if the heap must be temporarily copied and sorted/displayed
-
-Overall, the use of a heap makes priority-based ticket selection efficient.
-
-🚀 Compilation and Execution
-Compile
-g++ main.cpp -o ticket_system
-
-Run
-./ticket_system
-
-Run using an input file
-./ticket_system < input.txt
-
-📚 DSA Concepts Demonstrated
-This project demonstrates several important DSA concepts:
-
-Max Heap / Priority Queue
-
-Greedy Scheduling
-
-Simulation
-
-Dynamic Data Management
-
-STL set
-
-STL map
-
-STL vector
-
-Time-based priority adjustment
-
-🎯 Project Objective
-The main objective of this project is to demonstrate how heap-based priority scheduling can be combined with time simulation to create a dynamic support-ticket system.
-
-The project provides a practical example of how DSA concepts can be applied to a real-world problem where tasks continuously arrive, priorities change over time, and limited resources such as support agents must be managed efficiently.
+### Input
+ADD_AGENT 1  
+ADD_AGENT 2  
+ADD_TICKET 101 5  
+ADD_TICKET 102 3  
+TICK  
+QUERY  
+TICK  
+ADD_TICKET 103 10  
+QUERY  
+TICK  
+QUERY  
+
+---
+
+### Output
+Time: 1  
+Waiting: []  
+Busy Agents: [(1,101),(2,102)]  
+Resolved: []  
+
+Time: 2  
+Waiting: []  
+Busy Agents: [(1,103)]  
+Resolved: [101,102]  
+
+Time: 3  
+Waiting: []  
+Busy Agents: []  
+Resolved: [101,102,103]  
+
+---
+
+## ⏱ Complexity  
+- Ticket insertion: O(log N)  
+- Assignment: O(log N)  
+- Agent operations: O(log M)  
+- Query: O(N log N)  
+
+---
+
+## 🚀 How to Run  
+
+### Compile
+g++ main.cpp -o system  
+
+### Run
+./system  
+
+### Or using file input
+./system < input.txt  
+
+---
+
+## 📚 Concepts Used  
+- Heap (Priority Queue)  
+- Greedy Scheduling  
+- Simulation  
+- STL (set, map, vector)  
